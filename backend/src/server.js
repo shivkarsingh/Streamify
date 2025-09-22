@@ -11,10 +11,9 @@ import chatRoutes from "./routes/chat.route.js";
 import { connectDB } from "./lib/db.js";
 
 const app = express();
-
 const __dirname = path.resolve();
 
-
+// ✅ Allow frontend
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
@@ -25,12 +24,12 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-
+// ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
-
+// ✅ Frontend for production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
@@ -39,8 +38,8 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-
+// ✅ Connect DB once (cold start)
 connectDB();
 
-
+// ✅ Export for Vercel
 export default app;
